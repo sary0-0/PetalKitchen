@@ -14,7 +14,7 @@ Ovaj projekat sam napravila kako bih na jednom mjestu imala inspiraciju za kuhan
 
 ## 🛠️ Tehnologije koje sam koristila
 
-* **Frontend:** HTML5, CSS3 (Custom Grid & Flexbox), JavaScript (ES6+).
+* **Frontend:** HTML5, CSS3, JavaScript (ES6+).
 * **Backend:** Node.js & Express.
 * **Baza podataka:** SQLite.
 * **API:** [Spoonacular API](https://spoonacular.com/food-api) za povlačenje hiljada recepata.
