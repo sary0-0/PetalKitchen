@@ -663,40 +663,34 @@ body {
 }
 
 @media (max-width: 768px) {
-    /* Glavni kontejner se prebacuje iz reda u kolonu */
     .container {
         flex-direction: column;
     }
 
-    /* Sidebar (meni) se širi preko cijelog ekrana i stoji na vrhu */
     .sidebar {
         width: 100%;
         height: auto;
         padding: 15px;
         border-right: none;
         border-bottom: 2px solid #ffe0e6;
-        position: relative; /* Da ne bi bježao van ekrana */
+        position: relative; 
     }
 
-    /* Naslov Petal Kitchen na mobitelu */
     .sidebar h2 {
         text-align: center;
         font-size: 1.5rem;
     }
 
-    /* Recept Grid - smanjujemo broj kartica u redu na 2 za manje ekrane */
     #recipeGrid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
         gap: 12px;
         padding: 10px;
     }
 
-    /* Podesavamo kartice da tekst ne bude prevelik */
     .recipe-info h4 {
         font-size: 0.9rem;
     }
 
-    /* Dugmad u meniju - da se lakše klikne prstom */
     .menu a {
         padding: 12px;
         margin: 5px 0;
