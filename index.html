@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petal Kitchen 🌸</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="loginOverlay" class="login-overlay">
+        <div class="login-box">
+            <h2>Dobrodošla u Petal Kitchen 🌸</h2>
+            <p>Unesi svoje podatke da započnemo magiju</p>
+            <input type="text" id="loginName" placeholder="Tvoje ime...">
+            <input type="password" id="loginPass" placeholder="Tvoja šifra...">
+            <button onclick="loginUser()">Uđi u kuhinju ✨</button>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="logo">
+                <h2>Petal Kitchen 🌸</h2>
+            </div>
+            <nav class="menu">
+                <a href="#" class="active" onclick="filterByDiet('')"><i class="fa-solid fa-house"></i> Home</a>
+                <a href="#" onclick="filterByDiet('vegetarian')"><i class="fa-solid fa-leaf"></i> Veggie</a>
+                <a href="#" onclick="filterByDiet('gluten-free')"><i class="fa-solid fa-bread-slice"></i> No Gluten</a>
+                <a href="#" onclick="filterByHalal()"><i class="fa-solid fa-star-and-crescent"></i> Halal</a>
+                <a href="#" onclick="showFavorites()"><i class="fa-solid fa-heart"></i> Favorites</a>
+                
+                <p class="menu-label">Meal Type</p>
+                <a href="#" onclick="filterByType('breakfast')"><i class="fa-solid fa-mug-saucer"></i> Breakfast</a>
+                <a href="#" onclick="filterByType('main course')"><i class="fa-solid fa-utensils"></i> Lunch</a>
+                <a href="#" onclick="filterByType('soup')"><i class="fa-solid fa-moon"></i> Dinner</a>
+                <a href="#" onclick="filterByType('dessert')"><i class="fa-solid fa-ice-cream"></i> Desserts</a>
+
+                <p class="menu-label">My Kitchen</p>
+                <a href="#" onclick="showShoppingList()"><i class="fa-solid fa-cart-shopping"></i> Shopping List</a>
+            </nav>
+
+            <div class="planner-widget">
+                <p>Nemaš ideju za ručak?</p>
+                <button class="magic-btn" onclick="generateWeeklyPlan()">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Generiši Meni
+                </button>
+            </div>
+            </aside>
+
+        <main class="main-content">
+            <header class="top-bar">
+                <div class="search-wrapper">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="searchInput" placeholder="Search for recipes...">
+                </div>
+            
+                <button onclick="location.reload()" class="refresh-btn">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i> Inspire Me
+                </button>
+            
+                <div class="user-profile">
+                    <span id="userNameDisplay">Njamiii ✨</span>
+                    <button onclick="logoutUser()" class="logout-link" title="Odjavi se">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div id="welcomeSection">
+                <section class="hero-section">
+                    <p class="subtitle">Petal Kitchen · Od 2026.</p>
+                    <h1 class="hero-title">Ukus koji<br>oblikuje tvoj dan</h1>
+                    <p class="hero-desc">Kuhinja koja inspiriše gurmane, početnike i ljubitelje hrane. Stotine recepata i magija koja traje.</p>
+                </section>
+
+                <section class="stats-section">
+                    <div class="stat-box">
+                        <h3>1000+</h3>
+                        <p>Recepata</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>15</h3>
+                        <p>Minuta do obroka</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>4</h3>
+                        <p>Kategorije</p>
+                    </div>
+                    <div class="stat-box">
+                        <h3>1</h3>
+                        <p>Tajni sastojak 💖</p>
+                    </div>
+                </section>
+
+                <section class="programs-section">
+                    <h2 class="section-title">Naši obroci</h2>
+                    <div class="programs-grid">
+                        <div class="program-card" onclick="filterByType('breakfast')">
+                            <span class="prog-num">01</span>
+                            <h3 class="prog-title">🍳 Doručak</h3>
+                            <p class="prog-desc">Sveobuhvatni početak dana za punu energiju i koncentraciju.</p>
+                            <span class="prog-link">Saznaj više →</span>
+                        </div>
+                        <div class="program-card" onclick="filterByType('main course')">
+                            <span class="prog-num">02</span>
+                            <h3 class="prog-title">🍲 Ručak</h3>
+                            <p class="prog-desc">Pravi gurmanski sistemi za tvoje glavno dnevno okruženje.</p>
+                            <span class="prog-link">Saznaj više →</span>
+                        </div>
+                        <div class="program-card" onclick="filterByType('soup')">
+                            <span class="prog-num">03</span>
+                            <h3 class="prog-title">🌙 Večera</h3>
+                            <p class="prog-desc">Lagani obroci i analitički osmišljene supe za kraj dana.</p>
+                            <span class="prog-link">Saznaj više →</span>
+                        </div>
+                        <div class="program-card" onclick="filterByType('dessert')">
+                            <span class="prog-num">04</span>
+                            <h3 class="prog-title">🍰 Desert</h3>
+                            <p class="prog-desc">Slatkiši, tortice i magija za razumijevanje savršenog ukusa.</p>
+                            <span class="prog-link">Saznaj više →</span>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="mood-container">
+                <h3>Kako se osjećaš danas? ✨</h3>
+                <div class="mood-buttons">
+                    <button class="mood-btn" onclick="mixForMood('sad')">🥺 Trebam utjehu</button>
+                    <button class="mood-btn" onclick="mixForMood('lazy')">😴 Mrzi me da kuham</button>
+                    <button class="mood-btn" onclick="mixForMood('stressed')">🤯 Stres</button>
+                    <button class="mood-btn" onclick="mixForMood('happy')">🤩 Srećno i zdravo</button>
+                </div>
+            </div>
+
+            <section class="content-area">
+                <div class="section-title">
+                    <h2 id="currentCategory">Recommended for you</h2>
+                </div>
+                <div id="recipeGrid" class="recipe-grid"></div>
+            </section>
+
+            <footer class="main-footer">
+                <div class="footer-brand">
+                    <h3>Petal Kitchen 🌸</h3>
+                    <p>Tvoja dnevna doza kulinarske inspiracije.</p>
+                </div>
+                <div class="footer-bottom">
+                    <p>Napravljeno sa 💖</p>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <div id="recipeModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
