@@ -345,3 +345,15 @@ window.onclick = (e) => { if (e.target == document.getElementById('recipeModal')
 document.getElementById('searchInput').addEventListener('keypress', (e) => {
     if(e.key === 'Enter') getRecipes(e.target.value);
 });
+
+function toggleSidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('active');
+}
+
+// Opcionalno: Zatvori meni kad klikneš na neki link unutar njega
+document.querySelectorAll('.menu a').forEach(link => {
+    link.addEventListener('click', () => {
+        document.querySelector('.sidebar').classList.remove('active');
+    });
+});

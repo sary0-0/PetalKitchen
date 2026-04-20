@@ -663,33 +663,40 @@ body {
 }
 
 @media (max-width: 768px) {
-    .app-container {
-        flex-direction: column;
-        height: auto; 
-        min-height: 100vh;
-        overflow: visible; 
+
+    .hamburger-menu {
+        display: block !important;
+        background: none;
+        border: none;
+        font-size: 1.5rem;
+        color: #ff6b81;
+        cursor: pointer;
+        margin-right: 15px;
     }
 
     .sidebar {
-        width: 100%;
-        height: auto;
-        min-height: unset; 
-        padding: 15px;
-        border-right: none;
-        border-bottom: 2px solid #ffe0e6;
-        position: relative; 
+        position: fixed; 
+        top: 0;
+        left: -280px; 
+        width: 260px;
+        height: 100vh;
+        z-index: 10000;
+        transition: 0.4s; 
+        background: white;
+        box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+    }
+
+    .sidebar.active {
+        left: 0;
+    }
+
+    .app-container {
+        flex-direction: column;
     }
 
     .main-content {
         width: 100%;
-        height: auto;
-        padding: 15px;
-        overflow: visible;
-    }
-
-    .sidebar h2 {
-        text-align: center;
-        font-size: 1.5rem;
+        margin-left: 0;
     }
 
     #recipeGrid {
@@ -701,11 +708,10 @@ body {
     .recipe-info h4 {
         font-size: 0.9rem;
     }
+}
 
-    .menu a {
-        padding: 12px;
-        margin: 5px 0;
-    }
+.hamburger-menu {
+    display: none;
 
     login-box {
         width: 90%; 
