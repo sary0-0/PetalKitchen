@@ -663,17 +663,31 @@ body {
 }
 
 @media (max-width: 768px) {
-    .container {
+    /* Oslobađamo glavni kontejner da može ići u visinu */
+    .app-container {
         flex-direction: column;
+        height: auto; 
+        min-height: 100vh;
+        overflow: visible; 
     }
 
+    /* Sidebar ide na vrh, ispod njega se nastavlja sadržaj */
     .sidebar {
         width: 100%;
         height: auto;
+        min-height: unset; 
         padding: 15px;
         border-right: none;
         border-bottom: 2px solid #ffe0e6;
         position: relative; 
+    }
+
+    /* OVO JE BILO ZAKLJUČANO: Sada recepti imaju prostora! */
+    .main-content {
+        width: 100%;
+        height: auto;
+        padding: 15px;
+        overflow: visible;
     }
 
     .sidebar h2 {
@@ -684,7 +698,7 @@ body {
     #recipeGrid {
         grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)) !important;
         gap: 12px;
-        padding: 10px;
+        padding: 10px 0; /* Malo bolji padding za mobitel */
     }
 
     .recipe-info h4 {
@@ -694,5 +708,23 @@ body {
     .menu a {
         padding: 12px;
         margin: 5px 0;
+    }
+
+    login-box {
+        width: 90%; /* Kutija zauzima 90% ekrana na telefonu */
+        padding: 30px 20px; /* Malo manji okviri da stane sve */
+    }
+
+    .login-box h2 {
+        font-size: 1.5rem; /* Malo manji naslov za male ekrane */
+    }
+
+    .login-box input, 
+    .login-box button {
+        width: 100%; /* Polja idu od ivice do ivice kutije */
+        padding: 12px;
+        margin-bottom: 10px;
+        font-size: 16px; /* PRO TIP: 16px sprečava iPhone da automatski zumira ekran! */
+        box-sizing: border-box; /* Sprečava da polja ispadnu iz kutije */
     }
 }
