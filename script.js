@@ -32,7 +32,7 @@ async function loginUser() {
     }
 
     try {
-        const response = await fetch('http://localhost:3000/api/prijava', {
+        const response = await fetch('/api/shopping-lista', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ime: nameInput, sifra: passInput })
@@ -56,14 +56,14 @@ function logoutUser() {
 
 async function ucitajFavoriteIzBaze(userId) {
     try {
-        const res = await fetch(`http://localhost:3000/api/favoriti/${userId}`);
+        const res = await fetch(`/api/favoriti/${userId}`);
         if(res.ok) favorites = await res.json();
     } catch(e) { console.log("Greška sa favoritima"); }
 }
 
 async function ucitajShoppingListuIzBaze(userId) {
     try {
-        const res = await fetch(`http://localhost:3000/api/shopping-lista/${userId}`);
+        const res = await fetch(`/api/shopping-lista/${userId}`);
         if(res.ok) shoppingList = await res.json();
     } catch(e) { console.log("Greška sa listom"); }
 }
@@ -73,7 +73,7 @@ async function toggleFav(id, title, image) {
     if(!userId) return alert("Prijavi se! 🌸");
 
     try {
-        const response = await fetch('http://localhost:3000/api/favoriti', {
+        const response = await fetch('/api/shopping-lista', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ korisnik_id: userId, recept_id: id, naslov: title, slika: image })
@@ -90,7 +90,7 @@ async function addToShoppingList(item) {
     if(!userId) return alert("Prijavi se! 🛒");
 
     try {
-        const response = await fetch('http://localhost:3000/api/shopping-lista', {
+        const response = await fetch('/api/shopping-lista', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ korisnik_id: userId, namirnica: item })
