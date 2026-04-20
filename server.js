@@ -81,7 +81,7 @@ app.get('/api/shopping-lista/:userId', (req, res) => {
 
 // ZLATNO PRAVILO ZA RENDER (Catch-all ruta): 
 // Ako korisnik traži bilo šta što nije API, vrati ga na početnu stranicu (index.html)
-app.get('*', (req, res) => {
+app.get((req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
