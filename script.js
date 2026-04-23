@@ -21,10 +21,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     getRecipes();
 });
 
+async function registerUser() {
+    const nameInput = document.getElementById("loginName").value.trim();
+    const passInput = document.getElementById("loginPass").value.trim();
+
+    if (passInput.length < 7) {
+        alert("Šifra mora imati najmanje 7 karaktera! 🌸");
+        return;
+    }
+    if (nameInput === "") {
+        alert("Molim te unesi svoje ime! ✨");
+        return;
+    }
+
+    try {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ime: nameInput, sifra: passInput })
+        });
+        const data = await response.json();
+        
+        alert(data.poruka); 
+        
+        if (response.ok) {
+            document.getElementById("loginPass").value = "";
+        }
+    } catch (error) {
+        alert("Greška pri povezivanju sa serverom!");
+    }
+}
+
 async function loginUser() {
     const nameInput = document.getElementById("loginName").value.trim();
     const passInput = document.getElementById("loginPass").value.trim();
-    const loginOverlay = document.getElementById("loginOverlay");
 
     if (nameInput === "" || passInput === "") {
         alert("Molim te unesi i ime i šifru! 🌸");
@@ -32,16 +62,20 @@ async function loginUser() {
     }
 
     try {
-        const response = await fetch('/api/shopping-lista', {
+        const response = await fetch('/api/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ ime: nameInput, sifra: passInput })
         });
         const data = await response.json();
+        
         if (response.ok) {
-            localStorage.setItem("petalUserName", nameInput);
-            localStorage.setItem("petalUserId", data.idKorisnika);
+            localStorage.setItem("petalUserName", data.userName);
+            localStorage.setItem("petalUserId", data.userId);
+            alert(data.poruka);
             location.reload(); 
+        } else {
+            alert(data.poruka);
         }
     } catch (error) {
         alert("Server nije pokrenut!");
@@ -105,6 +139,7 @@ async function addToShoppingList(item) {
         }
     } catch(e) { alert("Greška!"); }
 }
+
 async function showShoppingList() {
     const userId = localStorage.getItem("petalUserId");
     if (!userId) {
@@ -117,7 +152,6 @@ async function showShoppingList() {
     const grid = document.getElementById('recipeGrid');
     document.getElementById('currentCategory').innerText = "MY SHOPPING LIST 🛒";
     
-    // Sređujemo stilove da lista bude fina i široka
     grid.style.display = "block";
     grid.style.columns = "auto";
     

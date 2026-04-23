@@ -24,23 +24,44 @@ const db = new sqlite3.Database('./baza.db', (err) => {
 });
 
 db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS korisnici (id INTEGER PRIMARY KEY AUTOINCREMENT, ime TEXT, sifra TEXT)`);
+    db.run(`CREATE TABLE IF NOT EXISTS korisnici (id INTEGER PRIMARY KEY AUTOINCREMENT, ime TEXT UNIQUE, sifra TEXT)`);
     db.run(`CREATE TABLE IF NOT EXISTS favoriti (id INTEGER PRIMARY KEY AUTOINCREMENT, korisnik_id INTEGER, recept_id INTEGER, naslov TEXT, slika TEXT)`);
     db.run(`CREATE TABLE IF NOT EXISTS shopping_lista (id INTEGER PRIMARY KEY AUTOINCREMENT, korisnik_id INTEGER, namirnica TEXT)`);
 });
 
-// Prijava i registracija korisnika
-app.post('/api/prijava', (req, res) => {
+// REGISTRACIJA
+app.post('/api/register', (req, res) => {
     const { ime, sifra } = req.body;
-    db.get("SELECT id FROM korisnici WHERE ime = ?", [ime], (err, row) => {
-        if (row) { 
-            res.json({ idKorisnika: row.id }); 
-        } else {
-            db.run("INSERT INTO korisnici (ime, sifra) VALUES (?, ?)", [ime, sifra], function(err) {
-                if (err) return res.status(500).json({ greska: err.message });
-                res.json({ idKorisnika: this.lastID });
-            });
+    
+    // Provjera dužine šifre na serveru
+    if (!sifra || sifra.length < 7) {
+        return res.status(400).json({ poruka: "Šifra mora imati najmanje 7 karaktera! 🌸" });
+    }
+
+    const query = "INSERT INTO korisnici (ime, sifra) VALUES (?, ?)";
+    db.run(query, [ime, sifra], function(err) {
+        if (err) {
+            if (err.message.includes('UNIQUE')) {
+                return res.status(400).json({ poruka: "Ovo ime je već zauzeto! Izaberi drugo." });
+            }
+            return res.status(500).json({ poruka: "Greška na serveru!" });
         }
+        res.json({ poruka: "Uspješna registracija! Sada se možeš prijaviti. ✨" });
+    });
+});
+
+// LOGIN
+app.post('/api/login', (req, res) => {
+    const { ime, sifra } = req.body;
+    
+    db.get("SELECT * FROM korisnici WHERE ime = ? AND sifra = ?", [ime, sifra], (err, row) => {
+        if (err) return res.status(500).json({ poruka: "Greška na serveru!" });
+        
+        if (!row) {
+            return res.status(401).json({ poruka: "Pogrešno ime ili šifra! Da li si se registrovala?" });
+        }
+        
+        res.json({ poruka: "Dobrodošla nazad! 🌸", userId: row.id, userName: row.ime });
     });
 });
 
@@ -48,18 +69,17 @@ app.post('/api/prijava', (req, res) => {
 app.post('/api/favoriti', (req, res) => {
     const { korisnik_id, recept_id, naslov, slika } = req.body;
     
-    // 1. Provjeravamo da li je recept već u favoritima
     const provjeraQuery = "SELECT id FROM favoriti WHERE korisnik_id = ? AND recept_id = ?";
     db.get(provjeraQuery, [korisnik_id, recept_id], (err, row) => {
         if (err) return res.status(500).json({ poruka: "Greška na serveru!" });
         
         if (row) {
-            // 2. Ako POSTOJI (već je crveno) -> BRIŠEMO GA (Remove)
+
             db.run("DELETE FROM favoriti WHERE id = ?", [row.id], function(err) {
                 res.json({ poruka: "Uklonjeno iz favorita! 💔" });
             });
         } else {
-            // 3. Ako NE POSTOJI -> DODAJEMO GA (Add)
+        
             const insertQuery = "INSERT INTO favoriti (korisnik_id, recept_id, naslov, slika) VALUES (?, ?, ?, ?)";
             db.run(insertQuery, [korisnik_id, recept_id, naslov, slika], function(err) {
                 res.json({ poruka: "Sačuvano u favorite! ❤️" });
@@ -85,7 +105,7 @@ app.post('/api/shopping-lista', (req, res) => {
     });
 });
 
-//Brisanje iz shopping liste
+// Brisanje iz shopping liste
 app.delete('/api/shopping-lista/:id', (req, res) => {
     const id = req.params.id; 
     db.run("DELETE FROM shopping_lista WHERE id = ?", [id], function(err) {
@@ -102,9 +122,7 @@ app.get('/api/shopping-lista/:userId', (req, res) => {
     });
 });
 
-// ZLATNO PRAVILO ZA RENDER (Catch-all ruta): 
-// Ako korisnik traži bilo šta što nije API, vrati ga na početnu stranicu (index.html)
-app.get((req, res) => {
+app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
