@@ -364,13 +364,8 @@ async function obrisiSastojak(id) {
         await fetch(`/api/shopping-lista/${id}`, {
             method: 'DELETE'
         });
-        
-        // Ponovo učitaj listu da sastojak odmah nestane sa ekrana
-        const userId = localStorage.getItem("petalUserId");
-        
-        // NAPOMENA: Ovdje stavi ime svoje funkcije koja crta shopping listu!
-        // Pretpostavljam da se zove ucitajShoppingListu(userId) ili slicno.
-        ucitajShoppingListu(userId); 
+
+        showShoppingList(); 
         
     } catch (e) {
         console.error("Greška pri brisanju sastojka", e);
