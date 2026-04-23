@@ -73,16 +73,19 @@ async function toggleFav(id, title, image) {
     if(!userId) return alert("Prijavi se! 🌸");
 
     try {
-        const response = await fetch('/api/shopping-lista', {
+        const response = await fetch('/api/favoriti', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ korisnik_id: userId, recept_id: id, naslov: title, slika: image })
         });
         const data = await response.json();
-        alert(data.poruka);
+
         await ucitajFavoriteIzBaze(userId);
-        renderCards(trenutniRecepti);
-    } catch (e) { alert("Greška!"); }
+        renderCards(trenutniRecepti); 
+    } catch (e) { 
+        alert("Greška prilikom dodavanja u favorite!"); 
+        console.error(e);
+    }
 }
 
 async function addToShoppingList(item) {
@@ -351,7 +354,6 @@ function toggleSidebar() {
     sidebar.classList.toggle('active');
 }
 
-// Opcionalno: Zatvori meni kad klikneš na neki link unutar njega
 document.querySelectorAll('.menu a').forEach(link => {
     link.addEventListener('click', () => {
         document.querySelector('.sidebar').classList.remove('active');
