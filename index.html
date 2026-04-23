@@ -14,8 +14,13 @@
             <p>Unesi svoje podatke da započnemo magiju</p>
             <input type="text" id="loginName" placeholder="Tvoje ime...">
             <input type="password" id="loginPass" placeholder="Tvoja šifra...">
-            <button onclick="loginUser()">Uđi u kuhinju ✨</button>
-        </div>
+            
+            <div id="authButtons" style="display: flex; flex-direction: column; gap: 8px; margin-top: 15px;">
+                <button onclick="loginUser()">Uđi u kuhinju ✨</button>
+                <p style="margin: 5px 0; font-size: 0.85rem; color: #666;">Nemaš profil?</p>
+                <button onclick="registerUser()" style="background-color: #ffb7c5; color: white;">Registruj se 📝</button>
+            </div>
+            </div>
     </div>
 
     <div class="app-container">
@@ -46,7 +51,7 @@
                     <i class="fa-solid fa-wand-magic-sparkles"></i> Generiši Meni
                 </button>
             </div>
-            </aside>
+        </aside>
 
         <main class="main-content">
             <header class="top-bar">

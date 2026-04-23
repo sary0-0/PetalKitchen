@@ -44,13 +44,27 @@ app.post('/api/prijava', (req, res) => {
     });
 });
 
-// Dodavanje u favorite
+// Dodavanje u favorite i brisanje
 app.post('/api/favoriti', (req, res) => {
     const { korisnik_id, recept_id, naslov, slika } = req.body;
-    const query = "INSERT INTO favoriti (korisnik_id, recept_id, naslov, slika) VALUES (?, ?, ?, ?)";
-    db.run(query, [korisnik_id, recept_id, naslov, slika], function(err) {
-        if (err) return res.status(500).json({ poruka: "Greška pri čuvanju!" });
-        res.json({ poruka: "Sačuvano u favorite! ❤️" });
+    
+    // 1. Provjeravamo da li je recept već u favoritima
+    const provjeraQuery = "SELECT id FROM favoriti WHERE korisnik_id = ? AND recept_id = ?";
+    db.get(provjeraQuery, [korisnik_id, recept_id], (err, row) => {
+        if (err) return res.status(500).json({ poruka: "Greška na serveru!" });
+        
+        if (row) {
+            // 2. Ako POSTOJI (već je crveno) -> BRIŠEMO GA (Remove)
+            db.run("DELETE FROM favoriti WHERE id = ?", [row.id], function(err) {
+                res.json({ poruka: "Uklonjeno iz favorita! 💔" });
+            });
+        } else {
+            // 3. Ako NE POSTOJI -> DODAJEMO GA (Add)
+            const insertQuery = "INSERT INTO favoriti (korisnik_id, recept_id, naslov, slika) VALUES (?, ?, ?, ?)";
+            db.run(insertQuery, [korisnik_id, recept_id, naslov, slika], function(err) {
+                res.json({ poruka: "Sačuvano u favorite! ❤️" });
+            });
+        }
     });
 });
 
@@ -68,6 +82,15 @@ app.post('/api/shopping-lista', (req, res) => {
     db.run("INSERT INTO shopping_lista (korisnik_id, namirnica) VALUES (?, ?)", [korisnik_id, namirnica], function(err) {
         if (err) return res.status(500).json({ poruka: "Greška pri dodavanju!" });
         res.json({ poruka: "Sastojak dodat! 🛒" });
+    });
+});
+
+//Brisanje iz shopping liste
+app.delete('/api/shopping-lista/:id', (req, res) => {
+    const id = req.params.id; 
+    db.run("DELETE FROM shopping_lista WHERE id = ?", [id], function(err) {
+        if (err) return res.status(500).json({ poruka: "Greška pri brisanju!" });
+        res.json({ poruka: "Obrisano!" });
     });
 });
 

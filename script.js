@@ -79,6 +79,7 @@ async function toggleFav(id, title, image) {
             body: JSON.stringify({ korisnik_id: userId, recept_id: id, naslov: title, slika: image })
         });
         const data = await response.json();
+        alert(data.poruka);
 
         await ucitajFavoriteIzBaze(userId);
         renderCards(trenutniRecepti); 
@@ -104,7 +105,6 @@ async function addToShoppingList(item) {
         }
     } catch(e) { alert("Greška!"); }
 }
-
 async function showShoppingList() {
     const userId = localStorage.getItem("petalUserId");
     if (!userId) {
@@ -130,9 +130,14 @@ async function showShoppingList() {
         <div style="background: white; padding: 30px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05);">
             <ul style="list-style: none; padding: 0; margin: 0;">
                 ${shoppingList.map((item) => `
-                    <li style="border-bottom: 1px dashed #ffe0e6; padding: 15px 10px; display: flex; justify-content: space-between; font-size: 1.1rem; color: #555;">
+                    <li style="border-bottom: 1px dashed #ffe0e6; padding: 15px 10px; display: flex; justify-content: space-between; align-items: center; font-size: 1.1rem; color: #555;">
                         ${item.namirnica} 
-                        <i class="fa-solid fa-check" style="color: #ff85a2;"></i>
+                        
+                        <i class="fa-solid fa-xmark" 
+                           onclick="obrisiSastojak(${item.id})" 
+                           style="color: #ff6b81; cursor: pointer; font-size: 1.2rem; padding: 5px;" 
+                           title="Obriši">
+                        </i>
                     </li>
                 `).join('')}
             </ul>
@@ -352,6 +357,24 @@ document.getElementById('searchInput').addEventListener('keypress', (e) => {
 function toggleSidebar() {
     const sidebar = document.querySelector('.sidebar');
     sidebar.classList.toggle('active');
+}
+
+async function obrisiSastojak(id) {
+    try {
+        await fetch(`/api/shopping-lista/${id}`, {
+            method: 'DELETE'
+        });
+        
+        // Ponovo učitaj listu da sastojak odmah nestane sa ekrana
+        const userId = localStorage.getItem("petalUserId");
+        
+        // NAPOMENA: Ovdje stavi ime svoje funkcije koja crta shopping listu!
+        // Pretpostavljam da se zove ucitajShoppingListu(userId) ili slicno.
+        ucitajShoppingListu(userId); 
+        
+    } catch (e) {
+        console.error("Greška pri brisanju sastojka", e);
+    }
 }
 
 document.querySelectorAll('.menu a').forEach(link => {
